@@ -155,8 +155,8 @@ def main():
   NUMBER_OF_PARTICIPANTS = 100
   MAX_STEALS = 100
   avg_return, avg_value = run_1000(NUMBER_OF_PARTICIPANTS,m)
-  save_graph_return(f'{MAX_STEALS}_{NUMBER_OF_PARTICIPANTS}_avg_return', avg_return)
-  save_graph_value(f'{MAX_STEALS}_{NUMBER_OF_PARTICIPANTS}_value_return', avg_value)
+  save_graph_return(f'{MAX_STEALS}_{NUMBER_OF_PARTICIPANTS}_avg_return', avg_return, "figures/figs")
+  save_graph_value(f'{MAX_STEALS}_{NUMBER_OF_PARTICIPANTS}_value_return', avg_value, "figures/figs")
 
 if __name__ == '__main__':
   main()
