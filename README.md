@@ -1,6 +1,6 @@
 # White Elephant Simulator
 
-```python
+```bash
 python3 run_sim.py
 usage: run_sim.py [-h] [-n NUMBER_OF_PARTICIPANTS] [-m MAX_STEALS] [-r RUNS]
                   [-d OUTPUT_DIR]
