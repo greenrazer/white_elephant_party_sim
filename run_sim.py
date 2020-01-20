@@ -1,5 +1,11 @@
+import argparse
 import numpy as np
 import matplotlib.pylab as plt
+
+DEFAULT_NUMBER_OF_PARTICIPANTS = 100
+DEFAULT_MAX_STEALS = 2
+DEFAULT_RUNS = 1000
+DEFAULT_OUTPUT_DIR = 'figures/figs'
 
 class WhiteElephantSim:
   def __init__(self, number_of_participants, number_of_steals):
@@ -123,10 +129,10 @@ def save_graph_value(filename, data, folder_path):
   plt.plot(x,y)
   plt.savefig(f'{folder_path}/{filename}.png')
 
-def run_1000(num_participants, num_steals):
+def run_n(num_participants, num_steals, runs):
   out = {}
   out2 = {}
-  for _ in range(1000):
+  for _ in range(runs):
     white_elephant_sim = WhiteElephantSim(num_participants, num_steals)
     white_elephant_sim.run()
 
@@ -152,11 +158,16 @@ def run_1000(num_participants, num_steals):
   return avg_return, avg_value
 
 def main():
-  NUMBER_OF_PARTICIPANTS = 100
-  MAX_STEALS = 100
-  avg_return, avg_value = run_1000(NUMBER_OF_PARTICIPANTS,m)
-  save_graph_return(f'{MAX_STEALS}_{NUMBER_OF_PARTICIPANTS}_avg_return', avg_return, "figures/figs")
-  save_graph_value(f'{MAX_STEALS}_{NUMBER_OF_PARTICIPANTS}_value_return', avg_value, "figures/figs")
+  parser = argparse.ArgumentParser(description='Run white elephant simuation.')
+  parser.add_argument('-n', '--number_of_participants', type=int, default=DEFAULT_NUMBER_OF_PARTICIPANTS, help='Number of participants in simulated white elephant party.')
+  parser.add_argument('-m', '--max_steals', type=int, default=DEFAULT_MAX_STEALS, help='Maximum steals per present.')
+  parser.add_argument('-r', '--runs', type=int, default=DEFAULT_RUNS, help='Amount of times to run simulation.')
+  parser.add_argument('-d', '--output_dir', type=str, default=DEFAULT_OUTPUT_DIR, help='Output directory to put figures.')
+  args = parser.parse_args()
+
+  avg_return, avg_value = run_n(args.number_of_participants,args.max_steals,args.runs)
+  save_graph_return(f'{args.max_steals}_{args.number_of_participants}_{args.runs}_avg_return', avg_return, args.output_dir)
+  save_graph_value(f'{args.max_steals}_{args.number_of_participants}_{args.runs}_value_return', avg_value, args.output_dir)
 
 if __name__ == '__main__':
   main()
