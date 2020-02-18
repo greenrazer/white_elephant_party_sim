@@ -1,8 +1,12 @@
 import math
+import argparse
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 from matplotlib import animation
 import numpy as np
+
+DEFAULT_NUMBER_OF_PARTICIPANTS = 3
+DEFAULT_MAX_STEALS = 2
 
 # print permutations of a given list 
 # https://www.geeksforgeeks.org/generate-all-the-permutation-of-a-list-in-python/
@@ -37,8 +41,7 @@ class WhiteElephantAnalysis:
     for gift_order in self.gift_orderings:
       self.curr_tree_info["gift_order"] = gift_order
       outcomes.append(self.run_tree())
-      # print(self.curr_tree_info["people_to_val"])
-      # print(outcomes[len(outcomes) - 1])
+
 
     partcipant_to_order_outcomes = [[0 for _ in range(self.people)] for _ in range(self.people)]
     
@@ -85,7 +88,7 @@ class WhiteElephantAnalysis:
     # if can steal must steal
     must_steal = None
     person_val = self.curr_tree_info["people_to_val"][curr_turn]
-    # print("P" + str(curr_turn+1))
+
     for gift_ind in range(person_val):
       if gift_to_person[gift_ind] is not None:
         if gift_to_steals[gift_ind] < self.steals:
@@ -99,7 +102,7 @@ class WhiteElephantAnalysis:
       gift_to_person[must_steal[GIFT]] = curr_turn
       gift_to_steals[must_steal[GIFT]] += 1
       person_to_gift[curr_turn] = must_steal[GIFT]
-      # print("P" + str(curr_turn+1) + " steals  V" + str(must_steal[GIFT]+1))
+
       self.run_tree_helper(turn,
                             gift_to_person,
                             gift_to_steals, 
@@ -115,7 +118,7 @@ class WhiteElephantAnalysis:
         if gift_to_person[gift_ind] is None:
           gift_to_person[gift_ind] = curr_turn
           person_to_gift[curr_turn] = gift_ind
-          # print("P" + str(curr_turn+1) + " picks  V" + str(gift_ind+1))
+
           self.run_tree_helper(turn + 1,
                               gift_to_person, 
                               gift_to_steals,
@@ -128,33 +131,56 @@ class WhiteElephantAnalysis:
 
 def main():
 
-  expected_vals = []
+  parser = argparse.ArgumentParser(description='Run white elephant analysis.')
+  parser.add_argument('-n', '--number_of_participants', type=int, default=DEFAULT_NUMBER_OF_PARTICIPANTS, help='Number of participants in simulated white elephant party.')
+  parser.add_argument('-s', '--graph_file', type=str, default=None, help='Save graph file.')
+  parser.add_argument('-a', '--animation_file', type=str, default=None, help='Save rotation animation of graph.')
+  parser.add_argument('-c', '--print_counts', action='store_true', help='Prints counts and total items.')
+  parser.add_argument('-p', '--print_probabilities', action='store_true', help='Prints probabilities.')
+  args = parser.parse_args()
 
-  MIN_PEOPLE = 6
-  MAX_PEOPLE = 6
-  for people in range(MIN_PEOPLE,MAX_PEOPLE+1):
+  people = args.number_of_participants
 
-    expected = [[0 for _ in range(people)] for _ in range(people)]
+  expected = [[0 for _ in range(people)] for _ in range(people)]
 
-    for steals in range(people):
-      white_elephant = WhiteElephantAnalysis(people,steals)
-      counts, entries_per_row = white_elephant.run()
+  for steals in range(people):
+    white_elephant = WhiteElephantAnalysis(people,steals)
+    counts, entries_per_row = white_elephant.run()
 
-      gift_val_scalar = (people)*(people + 1)/2
+    if args.print_counts or args.print_probabilities:
+      print()
+      print(f'steals: {steals}')
+
+    if args.print_counts:
+      print('counts:')
+      print(counts)
+      print('row totals:')
+      print(entries_per_row)
+
+    if args.print_probabilities:
+      probs = [row[:] for row in counts]
       for person in range(people):
         for gift in range(people):
-          probability = counts[person][gift]/entries_per_row
-          value =  people - (gift+1)
-          expected[person][steals] += probability*value
+          probs[person][gift] = counts[person][gift]/entries_per_row
+      print("probabilities:")
+      print(probs)
 
-    fig = plt.figure()
-    ax = plt.axes(projection="3d")
+    for person in range(people):
+      for gift in range(people):
+        probability = counts[person][gift]/entries_per_row
+        value =  people - (gift+1)
+        expected[person][steals] += probability*value
 
-    steal_axis = np.array(list(range(people)))
-    people_axis = np.array(list(range(1,people+1)))
+  fig = plt.figure()
+  ax = plt.axes(projection="3d")
 
-    X, Y = np.meshgrid(steal_axis, people_axis)
-    Z = np.array(expected)
+  steal_axis = np.array(list(range(people)))
+  people_axis = np.array(list(range(1,people+1)))
+
+  X, Y = np.meshgrid(steal_axis, people_axis)
+  Z = np.array(expected)
+
+  if args.graph_file:
     ax.plot_surface(X, Y, Z, cmap='hot')
     ax.set_xticks(steal_axis)
     ax.set_yticks(people_axis)
@@ -165,8 +191,9 @@ def main():
     ax.set_xlabel('Max Steals Per Gift')
     ax.set_ylabel('Participant')
     ax.set_zlabel('Expected Value Of Final Gift')
-    plt.show()
-    
+    plt.savefig(args.graph_file)
+
+  if args.animation_file:
     def init():
       ax.plot_surface(X, Y, Z, cmap='hot')
       ax.set_xticks(steal_axis)
@@ -185,10 +212,10 @@ def main():
         return fig,
 
     # Animate
-    anim = animation.FuncAnimation(fig, animate, init_func=init,
-                                  frames=360, interval=20, blit=True)
+    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20, blit=True)
+
     # Save
-    anim.save(f'/home/kabirnbaum/Documents/web_clones/white_elephant_sim/figures/complete_solve_figs/{people}_parts_expval_anim_3d.gif', writer='imagemagick', fps=30)
+    anim.save(args.animation_file, writer='imagemagick', fps=30)
 
 
 if __name__ == '__main__':
