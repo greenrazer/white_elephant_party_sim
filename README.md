@@ -17,8 +17,9 @@ The raw data counts for the complete analysis is in `raw.data.json` in the forma
 
 ```bash
 python3 src/run_analysis.py
-usage: run_analysis.py [-h] [-n NUMBER_OF_PARTICIPANTS] [-m MAX_STEALS]
-                       [-s GRAPH_FILE] [-a ANIMATION_FILE]
+
+usage: run_analysis.py [-h] [-n NUMBER_OF_PARTICIPANTS] [-s GRAPH_FILE]
+                       [-a ANIMATION_FILE] [-c] [-p]
 
 Run white elephant analysis.
 
@@ -27,19 +28,21 @@ optional arguments:
   -n NUMBER_OF_PARTICIPANTS, --number_of_participants NUMBER_OF_PARTICIPANTS
                         Number of participants in simulated white elephant
                         party.
-  -m MAX_STEALS, --max_steals MAX_STEALS
-                        Maximum steals per present.
   -s GRAPH_FILE, --graph_file GRAPH_FILE
                         Save graph file.
   -a ANIMATION_FILE, --animation_file ANIMATION_FILE
                         Save rotation animation of graph.
+  -c, --print_counts    Prints counts and total items.
+  -p, --print_probabilities
+                        Prints probabilities.
 ```
-This will evaluate the whole tree and output com
+This will evaluate the whole tree and output a graph and/or and animated graph if their respective flag is set.
 
 ## White Elephant Simulator Script
 
 ```bash
 python3 src/run_sim.py
+
 usage: run_sim.py [-h] [-n NUMBER_OF_PARTICIPANTS] [-m MAX_STEALS] [-r RUNS]
                   [-d OUTPUT_DIR]
 
