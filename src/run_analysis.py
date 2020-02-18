@@ -130,8 +130,8 @@ def main():
 
   expected_vals = []
 
-  MIN_PEOPLE = 7
-  MAX_PEOPLE = 7
+  MIN_PEOPLE = 6
+  MAX_PEOPLE = 6
   for people in range(MIN_PEOPLE,MAX_PEOPLE+1):
 
     expected = [[0 for _ in range(people)] for _ in range(people)]
@@ -139,8 +139,6 @@ def main():
     for steals in range(people):
       white_elephant = WhiteElephantAnalysis(people,steals)
       counts, entries_per_row = white_elephant.run()
-      print(counts)
-      print(entries_per_row)
 
       gift_val_scalar = (people)*(people + 1)/2
       for person in range(people):
