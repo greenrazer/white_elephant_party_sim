@@ -1,12 +1,12 @@
 # White Elephant Party Paper
 
-## Paper
+## Analysis
 
 Read it [here](paper.md)! :)
 
 ## Figures
 
-Feel free to use any figures in the figures folder, just credit me.
+Feel free to use any figures in the figures folder, just make sure to credit me.
 
 ## Data
 
