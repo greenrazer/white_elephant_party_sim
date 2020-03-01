@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+    <canvas id="myChart"></canvas>
+    <span id="typeContainer">Precomputed</span>
+    <div class="slide-container">
+      <span>Number Of Participants</span>
+      <input type="range" class="slider" id="participantSlider">
+      <input type="number" id="participantSliderInput">
+      <span>Maximum Number Of Steals Per Gift</span>
+      <input type="range" class="slider" id="maxStealsSlider">
+      <input type="number" id="maxStealsSliderInput">
+    </div>
+    <!-- <div class="ruleset-container">
+      <span>Ruleset</span>
+      <input type="radio" id="rulesetDefault" name="default" value="default" checked>
+      <label for="default">Default</label><br>
+    </div> -->
+    <div class="options-container">
+      <input type="checkbox" id="relativeValues" name="default">
+      <label for="default">Relative Values</label><br>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="scripts/simulator.js" type="text/javascript"></script>
+    <script src="scripts/data.js" type="text/javascript"></script>
+    <script src="scripts/main.js" type="text/javascript"></script>
+  </body>
+</html>
