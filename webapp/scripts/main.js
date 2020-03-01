@@ -160,15 +160,11 @@ let participantsSliderInputFunc = function (self) {
     participantSlider.value = participantSliderInput.value;
     return;
   }
-  
+
   participantSlider.value = val;
   
   if(val >= DEFAULT_SLIDER_MAX_PARTICIPANTS){
-    // participantSlider.max = val+10;
     participantSlider.value = DEFAULT_SLIDER_MAX_PARTICIPANTS;
-  }
-  else {
-    participantSlider.max = DEFAULT_SLIDER_MAX_PARTICIPANTS;
   }
   
   maxStealsSlider.max = val-1;
@@ -207,6 +203,7 @@ participantSlider.oninput = function() {
   let val = parseInt(this.value);
   participantSliderInput.value = val;
   maxStealsSlider.max = val-1;
+  maxStealsSliderInput.max = val-1;
   maxStealsSliderInputFunc(maxStealsSliderInput);
 }
 
